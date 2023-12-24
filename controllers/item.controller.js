@@ -2,9 +2,9 @@ const Item = require('../models/items.model.js')
 
 
 const createItems = async (req, res) => {
-    const { image, title, colorVariation, sizeVariation } = req.body
+    const { image, title, colors, imgClicked, imgLinked } = req.body
 
-    const item = await Item.create({ image, title, colorVariation, sizeVariation })
+    const item = await Item.create({ image, title, colors, imgClicked, imgLinked })
 
     if (!item) {
         return res.status(404).json({
@@ -32,8 +32,6 @@ const getItems = async (req, res) => {
         })
     }
 
-
-
     res.status(200).json({
         success: true,
         total: totalItems,
@@ -41,4 +39,21 @@ const getItems = async (req, res) => {
     })
 }
 
-module.exports = { createItems, getItems }
+const getSingleItem = async (req, res) => {
+    const { id } = req.params
+    const item = await Item.findById(id)
+
+    if (!item) {
+        return res.status(404).json({
+            success: false,
+            message: 'No Item found'
+        })
+    }
+
+    res.status(200).json({
+        success: true,
+        data: item
+    })
+}
+
+module.exports = { createItems, getItems, getSingleItem }
